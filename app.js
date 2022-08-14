@@ -1,5 +1,5 @@
 //jshint esversion:6
-
+require('dotenv').config();
 const express = require("express");
 
 const bodyParser = require("body-parser");
@@ -27,8 +27,7 @@ const userSchema = new mongoose.Schema ({ //this type of mongoose encryption is 
   password: String
 });
 
-const secret="Something. This is basically used to check for the encryption keys";
-userSchema.plugin(encrypt, {secret: secret, encryptFields: ["password"]});
+userSchema.plugin(encrypt, {secret: process.env.SECRET, encryptFields: ["password"]});
 
 const User = new mongoose.model("User", userSchema);
 
