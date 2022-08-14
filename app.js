@@ -5,7 +5,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const mongoose = require("mongoose");
-const encrypt = require("mongoose-encryption");
+// const encrypt = require("mongoose-encryption");
+const md5 = require("md5");
 
 
 
@@ -26,8 +27,10 @@ const userSchema = new mongoose.Schema ({ //this type of mongoose encryption is 
   email: String,
   password: String
 });
-
-userSchema.plugin(encrypt, {secret: process.env.SECRET, encryptFields: ["password"]});
+//
+// userSchema.plugin(encrypt, {secret: process.env.SECRET, encryptFields: ["password"]});
+//we have removed the above line of code because of the MD5 hash function which we have used which will help us to Hash a function instread of
+// encrypting it
 
 const User = new mongoose.model("User", userSchema);
 
@@ -48,7 +51,7 @@ app.get("/register", function(req, res) {
 app.post("/register", function(req, res){
   const newUser = new User({
     email: req.body.username,
-    password: req.body.password
+    password: md5(req.body.password)
   });
 
   newUser.save(function(err){
