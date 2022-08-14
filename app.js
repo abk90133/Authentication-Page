@@ -5,6 +5,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const mongoose = require("mongoose");
+const encrypt = require("mongoose-encryption");
 
 
 
@@ -21,10 +22,13 @@ app.use(express.static("public"));
 
 mongoose.connect("mongodb://localhost:27017/userDB", {useNewUrlParser: true});
 
-const userSchema = {
+const userSchema = new mongoose.Schema ({ //this type of mongoose encryption is used when we want to encrypt a data
   email: String,
   password: String
-}
+});
+
+const secret="Something. This is basically used to check for the encryption keys";
+userSchema.plugin(encrypt, {secret: secret, encryptFields: ["password"]});
 
 const User = new mongoose.model("User", userSchema);
 
